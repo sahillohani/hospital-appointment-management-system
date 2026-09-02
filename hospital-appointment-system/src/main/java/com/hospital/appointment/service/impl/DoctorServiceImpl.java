@@ -6,23 +6,40 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hospital.appointment.dto.DoctorRequestDto;
+import com.hospital.appointment.dto.DoctorUpdateRequestDto;
 import com.hospital.appointment.entity.Doctor;
 import com.hospital.appointment.entity.Role;
 import com.hospital.appointment.entity.User;
 import com.hospital.appointment.exception.DoctorAlreadyExistsException;
 import com.hospital.appointment.exception.DoctorNotFoundException;
+import com.hospital.appointment.exception.UnauthorizedDoctorAccessException;
+import com.hospital.appointment.exception.UsernameAlreadyExistsException;
 import com.hospital.appointment.repository.DoctorRepository;
+import com.hospital.appointment.repository.UserRepository;
 import com.hospital.appointment.service.DoctorService;
 
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
+import com.hospital.appointment.exception.UnauthorizedDoctorAccessException;
 @Service
 public class DoctorServiceImpl implements DoctorService {
 
     @Autowired
     private DoctorRepository doctorRepository;
-
+    @Autowired
+    private UserRepository userRepository;
     @Override
     public Doctor createDoctor(DoctorRequestDto dto) {
 
+    	if (userRepository.existsByUsername(
+    	        dto.getUsername())) {
+
+    	    throw new UsernameAlreadyExistsException(
+    	            "Username already exists");}
+    	
+    	
         if (doctorRepository.existsByPhoneNumber(
                 dto.getPhoneNumber())) {
 
@@ -53,7 +70,8 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public Doctor getDoctorById(Long doctorId) {
-
+    	validateDoctorOwnership(doctorId);
+    	
         return doctorRepository
                 .findById(doctorId)
                 .orElseThrow(() ->
@@ -65,7 +83,9 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     public Doctor updateDoctor(
             Long doctorId,
-            Doctor doctor) {
+            DoctorUpdateRequestDto dto) {
+
+        validateDoctorOwnership(doctorId);
 
         Doctor existingDoctor =
                 doctorRepository
@@ -76,20 +96,26 @@ public class DoctorServiceImpl implements DoctorService {
                                                 + doctorId));
 
         existingDoctor.setDoctorName(
-                doctor.getDoctorName());
+                dto.getDoctorName());
 
         existingDoctor.setSpecialization(
-                doctor.getSpecialization());
+                dto.getSpecialization());
 
         existingDoctor.setPhoneNumber(
-                doctor.getPhoneNumber());
+                dto.getPhoneNumber());
+
+        existingDoctor.getUser()
+                .setUsername(dto.getUsername());
+
+        existingDoctor.getUser()
+                .setPassword(dto.getPassword());
 
         return doctorRepository.save(existingDoctor);
     }
-
     @Override
     public void deleteDoctor(Long doctorId) {
-
+    	validateDoctorOwnership(doctorId);
+    	
         if (!doctorRepository.existsById(doctorId)) {
 
             throw new DoctorNotFoundException(
@@ -99,4 +125,39 @@ public class DoctorServiceImpl implements DoctorService {
 
         doctorRepository.deleteById(doctorId);
     }
+    
+    
+    
+    
+    private void validateDoctorOwnership(
+            Long doctorId) {
+
+        Authentication authentication =
+                SecurityContextHolder
+                        .getContext()
+                        .getAuthentication();
+
+        String username =
+                authentication.getName();
+
+        // Admin bypass
+        if ("admin".equals(username)) {
+            return;
+        }
+
+        Doctor loggedInDoctor =
+                doctorRepository
+                        .findByUserUsername(username)
+                        .orElseThrow(() ->
+                                new DoctorNotFoundException(
+                                        "Doctor not found"));
+
+        if (!loggedInDoctor.getDoctorId()
+                .equals(doctorId)) {
+
+            throw new UnauthorizedDoctorAccessException(
+                    "You can access only your own profile");
+        }
+    }
+    
 }

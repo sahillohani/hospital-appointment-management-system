@@ -3,6 +3,7 @@ package com.hospital.appointment.service;
 import java.util.List;
 
 import com.hospital.appointment.dto.DoctorRequestDto;
+import com.hospital.appointment.dto.DoctorUpdateRequestDto;
 import com.hospital.appointment.entity.Doctor;
 
 public interface DoctorService {
@@ -12,7 +13,18 @@ public interface DoctorService {
 
 	Doctor getDoctorById(Long doctorId);
 
-	Doctor updateDoctor(Long doctorId, Doctor doctor);
-
+//	Doctor updateDoctor(
+//	        Long doctorId,
+//	        Doctor doctor);
+	
+	
+	Doctor updateDoctor(
+			
+			Long doctorId,
+			
+			DoctorUpdateRequestDto dto);
+	
+	
+	
 	void deleteDoctor(Long doctorId);
 }

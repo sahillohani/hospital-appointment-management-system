@@ -1,16 +1,30 @@
 package com.hospital.appointment.dto;
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+
 public class PatientRequestDto {
 
+    @NotBlank(message = "Patient name is required")
     private String patientName;
 
+    @Min(value = 1, message = "Age should be greater than 0")
     private int age;
 
+    @Pattern(
+            regexp = "^[0-9]{10}$",
+            message = "Phone number must contain only numeric digits and must be exactly 10 digits long")
     private String phoneNumber;
 
+    @NotBlank(message = "Username is required")
     private String username;
 
+    @NotBlank(message = "Password is required")
     private String password;
+
+    public PatientRequestDto() {
+    }
 
     public String getPatientName() {
         return patientName;

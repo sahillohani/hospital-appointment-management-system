@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hospital.appointment.dto.DoctorRequestDto;
+import com.hospital.appointment.dto.DoctorUpdateRequestDto;
 import com.hospital.appointment.entity.Doctor;
 import com.hospital.appointment.service.DoctorService;
 
@@ -42,10 +43,14 @@ public class DoctorController {
     }
 
     @PutMapping("/{doctorId}")
-    public Doctor updateDoctor(@PathVariable Long doctorId,
-    		@Valid @RequestBody Doctor doctor) {
+   
+    public Doctor updateDoctor(
+    
+    @PathVariable Long doctorId,
+   
+    @Valid @RequestBody DoctorUpdateRequestDto dto) {
 
-        return doctorService.updateDoctor(doctorId, doctor);
+        return doctorService.updateDoctor(doctorId, dto);
     }
 
     @DeleteMapping("/{doctorId}")

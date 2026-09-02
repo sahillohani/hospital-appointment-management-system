@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.hospital.appointment.dto.PatientRequestDto;
+import com.hospital.appointment.dto.PatientUpdateRequestDto;
 import com.hospital.appointment.entity.Patient;
 
 public interface PatientService {
@@ -13,8 +14,9 @@ public interface PatientService {
 
 	Patient getPatientById(Long patientId);
 
-	Patient updatePatient(Long patientId, Patient patient);
 
+	Patient updatePatient(Long patientId,
+	                      PatientUpdateRequestDto dto);
 	void deletePatient(Long patientId);
 //	Optional<Patient> findByUserUsername(String username);
 }

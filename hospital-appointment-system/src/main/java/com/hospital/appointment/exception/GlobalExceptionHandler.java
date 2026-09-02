@@ -106,6 +106,39 @@ public class GlobalExceptionHandler {
                 ex.getMessage(),
                 HttpStatus.UNAUTHORIZED);
     }
+    @ExceptionHandler(
+            UnauthorizedPatientAccessException.class)
+    public ResponseEntity<String>
+    handleUnauthorizedPatientAccessException(
+            UnauthorizedPatientAccessException ex) {
+
+        return new ResponseEntity<>(
+                ex.getMessage(),
+                HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(
+            UnauthorizedDoctorAccessException.class)
+    public ResponseEntity<String>
+    handleUnauthorizedDoctorAccessException(
+            UnauthorizedDoctorAccessException ex) {
+
+        return new ResponseEntity<>(
+                ex.getMessage(),
+                HttpStatus.FORBIDDEN);
+    }
+
+    
+    @ExceptionHandler(
+            UsernameAlreadyExistsException.class)
+    public ResponseEntity<String>
+    handleUsernameAlreadyExistsException(
+            UsernameAlreadyExistsException ex) {
+
+        return new ResponseEntity<>(
+                ex.getMessage(),
+                HttpStatus.CONFLICT);
+    }
     
 
 }
