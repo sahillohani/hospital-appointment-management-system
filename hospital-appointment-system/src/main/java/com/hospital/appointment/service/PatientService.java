@@ -1,6 +1,7 @@
 package com.hospital.appointment.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.hospital.appointment.dto.PatientRequestDto;
 import com.hospital.appointment.entity.Patient;
@@ -15,4 +16,5 @@ public interface PatientService {
 	Patient updatePatient(Long patientId, Patient patient);
 
 	void deletePatient(Long patientId);
+//	Optional<Patient> findByUserUsername(String username);
 }
