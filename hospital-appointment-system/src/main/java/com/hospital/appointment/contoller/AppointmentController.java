@@ -37,6 +37,20 @@ public class AppointmentController {
         return appointmentService.getAppointmentById(
                 appointmentId);
     }
+    @GetMapping("/doctor/{doctorId}")
+    public List<Appointment> getAppointmentsByDoctorId(
+            @PathVariable Long doctorId) {
+
+        return appointmentService
+                .getAppointmentsByDoctorId(doctorId);
+    }
+    @GetMapping("/patient/{patientId}")
+    public List<Appointment> getAppointmentsByPatientId(
+            @PathVariable Long patientId) {
+
+        return appointmentService
+                .getAppointmentsByPatientId(patientId);
+    }
 
     @PutMapping("/{appointmentId}")
     public Appointment updateAppointment(
@@ -57,4 +71,5 @@ public class AppointmentController {
 
         return "Appointment cancelled successfully";
     }
+    
 }

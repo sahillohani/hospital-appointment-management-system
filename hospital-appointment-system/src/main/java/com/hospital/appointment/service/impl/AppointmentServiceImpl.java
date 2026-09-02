@@ -66,15 +66,29 @@ public class AppointmentServiceImpl implements AppointmentService {
                     "Appointments are allowed only in 30-minute intervals");
         }
 
-        // Prevent Duplicate Booking
-        boolean alreadyBooked =
+        // Prevent Patient Double Booking
+        boolean patientAlreadyBooked =
+                appointmentRepository
+                        .existsByPatientIdAndAppointmentDateAndAppointmentTime(
+                                appointment.getPatientId(),
+                                appointment.getAppointmentDate(),
+                                appointment.getAppointmentTime());
+
+        if (patientAlreadyBooked) {
+
+            throw new SlotAlreadyBookedException(
+                    "Patient already has an appointment for this slot");
+        }
+
+        // Prevent Doctor Double Booking
+        boolean doctorAlreadyBooked =
                 appointmentRepository
                         .existsByDoctorIdAndAppointmentDateAndAppointmentTime(
                                 appointment.getDoctorId(),
                                 appointment.getAppointmentDate(),
                                 appointment.getAppointmentTime());
 
-        if (alreadyBooked) {
+        if (doctorAlreadyBooked) {
 
             throw new SlotAlreadyBookedException(
                     "Doctor already booked for this slot");
@@ -142,4 +156,35 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointmentRepository.deleteById(
                 appointmentId);
     }
+    
+    @Override
+    public List<Appointment> getAppointmentsByDoctorId(
+            Long doctorId) {
+
+        if (!doctorRepository.existsById(doctorId)) {
+
+            throw new DoctorNotFoundException(
+                    "Doctor not found with id : "
+                            + doctorId);
+        }
+
+        return appointmentRepository.findByDoctorId(
+                doctorId);
+    }
+    
+    @Override
+    public List<Appointment> getAppointmentsByPatientId(
+            Long patientId) {
+
+        if (!patientRepository.existsById(patientId)) {
+
+            throw new PatientNotFoundException(
+                    "Patient not found with id : "
+                            + patientId);
+        }
+
+        return appointmentRepository
+                .findByPatientId(patientId);
+    }
+    
 }

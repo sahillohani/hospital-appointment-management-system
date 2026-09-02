@@ -16,4 +16,8 @@ public interface AppointmentService {
                                   Appointment appointment);
 
     void cancelAppointment(Long appointmentId);
+
+	List<Appointment> getAppointmentsByDoctorId(Long doctorId);
+
+	List<Appointment> getAppointmentsByPatientId(Long patientId);
 }

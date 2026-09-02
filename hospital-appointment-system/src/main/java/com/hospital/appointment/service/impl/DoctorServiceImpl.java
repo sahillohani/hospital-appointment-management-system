@@ -5,7 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.hospital.appointment.dto.DoctorRequestDto;
 import com.hospital.appointment.entity.Doctor;
+import com.hospital.appointment.entity.Role;
+import com.hospital.appointment.entity.User;
 import com.hospital.appointment.exception.DoctorAlreadyExistsException;
 import com.hospital.appointment.exception.DoctorNotFoundException;
 import com.hospital.appointment.repository.DoctorRepository;
@@ -18,14 +21,27 @@ public class DoctorServiceImpl implements DoctorService {
     private DoctorRepository doctorRepository;
 
     @Override
-    public Doctor createDoctor(Doctor doctor) {
+    public Doctor createDoctor(DoctorRequestDto dto) {
 
         if (doctorRepository.existsByPhoneNumber(
-                doctor.getPhoneNumber())) {
+                dto.getPhoneNumber())) {
 
             throw new DoctorAlreadyExistsException(
                     "Doctor already exists with this phone number");
         }
+
+        User user = new User();
+
+        user.setUsername(dto.getUsername());
+        user.setPassword(dto.getPassword());
+        user.setRole(Role.DOCTOR);
+
+        Doctor doctor = new Doctor();
+
+        doctor.setDoctorName(dto.getDoctorName());
+        doctor.setSpecialization(dto.getSpecialization());
+        doctor.setPhoneNumber(dto.getPhoneNumber());
+        doctor.setUser(user);
 
         return doctorRepository.save(doctor);
     }

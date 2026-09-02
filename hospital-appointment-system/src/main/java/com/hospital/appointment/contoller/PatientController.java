@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hospital.appointment.dto.PatientRequestDto;
 import com.hospital.appointment.entity.Patient;
 import com.hospital.appointment.service.PatientService;
 
@@ -25,8 +26,10 @@ public class PatientController {
     private PatientService patientService;
 
     @PostMapping
-    public Patient createPatient(@Valid @RequestBody Patient patient) {
-        return patientService.createPatient(patient);
+    public Patient createPatient(
+            @Valid @RequestBody PatientRequestDto dto) {
+
+        return patientService.createPatient(dto);
     }
 
     @GetMapping

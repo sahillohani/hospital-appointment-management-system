@@ -5,11 +5,14 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.hospital.appointment.dto.PatientRequestDto;
 import com.hospital.appointment.entity.Patient;
+import com.hospital.appointment.entity.Role;
+import com.hospital.appointment.entity.User;
+import com.hospital.appointment.exception.PatientAlreadyExistsException;
 import com.hospital.appointment.exception.PatientNotFoundException;
 import com.hospital.appointment.repository.PatientRepository;
 import com.hospital.appointment.service.PatientService;
-import com.hospital.appointment.exception.PatientAlreadyExistsException;
 
 @Service
 public class PatientServiceImpl implements PatientService {
@@ -18,17 +21,31 @@ public class PatientServiceImpl implements PatientService {
     private PatientRepository patientRepository;
 
     @Override
-    public Patient createPatient(Patient patient) {
+    public Patient createPatient(PatientRequestDto dto) {
 
         if (patientRepository.existsByPhoneNumber(
-                patient.getPhoneNumber())) {
+                dto.getPhoneNumber())) {
 
             throw new PatientAlreadyExistsException(
                     "Patient already exists with this phone number");
         }
 
+        User user = new User();
+
+        user.setUsername(dto.getUsername());
+        user.setPassword(dto.getPassword());
+        user.setRole(Role.PATIENT);
+
+        Patient patient = new Patient();
+
+        patient.setPatientName(dto.getPatientName());
+        patient.setAge(dto.getAge());
+        patient.setPhoneNumber(dto.getPhoneNumber());
+        patient.setUser(user);
+
         return patientRepository.save(patient);
     }
+
     @Override
     public List<Patient> getAllPatients() {
         return patientRepository.findAll();
