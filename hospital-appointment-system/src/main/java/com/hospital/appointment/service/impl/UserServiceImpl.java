@@ -1,5 +1,7 @@
 package com.hospital.appointment.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,10 @@ import com.hospital.appointment.service.UserService;
 @Service
 public class UserServiceImpl implements UserService {
 
+    private static final Logger logger =
+            LoggerFactory.getLogger(
+                    UserServiceImpl.class);
+
     @Autowired
     private UserRepository userRepository;
 
@@ -21,11 +27,20 @@ public class UserServiceImpl implements UserService {
     private JwtUtil jwtUtil;
 
     @Override
-    public LoginResponse login(String username,
-                               String password) {
+    public LoginResponse login(
+            String username,
+            String password) {
 
+        logger.info(
+                "Login attempt for username: {}",
+                username);
+
+        // Admin Login
         if ("admin".equals(username)
                 && "admin123".equals(password)) {
+
+            logger.info(
+                    "Admin login successful");
 
             String token =
                     jwtUtil.generateToken(
@@ -39,12 +54,24 @@ public class UserServiceImpl implements UserService {
         }
 
         User user =
-                userRepository.findByUsername(username)
-                        .orElseThrow(() ->
-                                new UserNotFoundException(
-                                        "User not found"));
+                userRepository
+                        .findByUsername(username)
+                        .orElseThrow(() -> {
 
-        if (!user.getPassword().equals(password)) {
+                            logger.error(
+                                    "Login failed. User not found: {}",
+                                    username);
+
+                            return new UserNotFoundException(
+                                    "User not found");
+                        });
+
+        if (!user.getPassword()
+                .equals(password)) {
+
+            logger.warn(
+                    "Invalid password attempt for username: {}",
+                    username);
 
             throw new InvalidCredentialsException(
                     "Invalid Password");
@@ -54,6 +81,11 @@ public class UserServiceImpl implements UserService {
                 jwtUtil.generateToken(
                         user.getUsername(),
                         user.getRole().name());
+
+        logger.info(
+                "Login successful for username: {} with role: {}",
+                user.getUsername(),
+                user.getRole().name());
 
         return new LoginResponse(
                 "Login Successful",

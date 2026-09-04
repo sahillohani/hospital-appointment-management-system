@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import com.hospital.appointment.dto.AppointmentRequestDto;
+import com.hospital.appointment.dto.AppointmentUpdateRequestDto;
 import com.hospital.appointment.entity.Appointment;
 import com.hospital.appointment.service.AppointmentService;
 
@@ -19,9 +21,9 @@ public class AppointmentController {
 
     @PostMapping
     public Appointment createAppointment(
-    		@Valid  @RequestBody Appointment appointment) {
+            @Valid @RequestBody AppointmentRequestDto dto) {
 
-        return appointmentService.createAppointment(appointment);
+        return appointmentService.createAppointment(dto);
     }
 
     @GetMapping
@@ -37,29 +39,31 @@ public class AppointmentController {
         return appointmentService.getAppointmentById(
                 appointmentId);
     }
+
     @GetMapping("/doctor/{doctorId}")
     public List<Appointment> getAppointmentsByDoctorId(
             @PathVariable Long doctorId) {
 
-        return appointmentService
-                .getAppointmentsByDoctorId(doctorId);
+        return appointmentService.getAppointmentsByDoctorId(
+                doctorId);
     }
+
     @GetMapping("/patient/{patientId}")
     public List<Appointment> getAppointmentsByPatientId(
             @PathVariable Long patientId) {
 
-        return appointmentService
-                .getAppointmentsByPatientId(patientId);
+        return appointmentService.getAppointmentsByPatientId(
+                patientId);
     }
 
     @PutMapping("/{appointmentId}")
     public Appointment updateAppointment(
             @PathVariable Long appointmentId,
-            @Valid  @RequestBody Appointment appointment) {
+            @Valid @RequestBody AppointmentUpdateRequestDto dto) {
 
         return appointmentService.updateAppointment(
                 appointmentId,
-                appointment);
+                dto);
     }
 
     @DeleteMapping("/{appointmentId}")
@@ -71,5 +75,4 @@ public class AppointmentController {
 
         return "Appointment cancelled successfully";
     }
-    
 }

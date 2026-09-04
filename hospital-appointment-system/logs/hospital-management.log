@@ -1,0 +1,49 @@
+2026-09-04T16:38:06.888+05:30  INFO 33612 --- [hospital-appointment-system] [main] h.a.HospitalAppointmentSystemApplication : Starting HospitalAppointmentSystemApplication using Java 17.0.9 with PID 33612 (C:\Users\salohani\OneDrive - Capgemini\Desktop\Hospital Appointment Management  System\hospital-appointment-system (1)\hospital-appointment-system\target\classes started by salohani in C:\Users\salohani\OneDrive - Capgemini\Desktop\Hospital Appointment Management  System\hospital-appointment-system (1)\hospital-appointment-system)
+2026-09-04T16:38:06.894+05:30 DEBUG 33612 --- [hospital-appointment-system] [main] h.a.HospitalAppointmentSystemApplication : Running with Spring Boot v3.5.6, Spring v6.2.11
+2026-09-04T16:38:06.896+05:30  INFO 33612 --- [hospital-appointment-system] [main] h.a.HospitalAppointmentSystemApplication : No active profile set, falling back to 1 default profile: "default"
+2026-09-04T16:38:09.092+05:30  INFO 33612 --- [hospital-appointment-system] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-09-04T16:38:09.319+05:30  INFO 33612 --- [hospital-appointment-system] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 197 ms. Found 4 JPA repository interfaces.
+2026-09-04T16:38:10.859+05:30  INFO 33612 --- [hospital-appointment-system] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-09-04T16:38:10.879+05:30  INFO 33612 --- [hospital-appointment-system] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-09-04T16:38:10.880+05:30  INFO 33612 --- [hospital-appointment-system] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.46]
+2026-09-04T16:38:11.037+05:30  INFO 33612 --- [hospital-appointment-system] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-09-04T16:38:11.038+05:30  INFO 33612 --- [hospital-appointment-system] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 4049 ms
+2026-09-04T16:38:11.309+05:30  INFO 33612 --- [hospital-appointment-system] [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-09-04T16:38:11.453+05:30  INFO 33612 --- [hospital-appointment-system] [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.29.Final
+2026-09-04T16:38:11.519+05:30  INFO 33612 --- [hospital-appointment-system] [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-09-04T16:38:12.214+05:30  INFO 33612 --- [hospital-appointment-system] [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-09-04T16:38:12.273+05:30  INFO 33612 --- [hospital-appointment-system] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-09-04T16:38:12.818+05:30  INFO 33612 --- [hospital-appointment-system] [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@78fb72cb
+2026-09-04T16:38:12.821+05:30  INFO 33612 --- [hospital-appointment-system] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-09-04T16:38:12.991+05:30  INFO 33612 --- [hospital-appointment-system] [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.0.27
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-09-04T16:38:14.931+05:30  INFO 33612 --- [hospital-appointment-system] [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-09-04T16:38:15.130+05:30  INFO 33612 --- [hospital-appointment-system] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-09-04T16:38:15.768+05:30 DEBUG 33612 --- [hospital-appointment-system] [main] c.h.appointment.security.JwtFilter       : Filter 'jwtFilter' configured for use
+2026-09-04T16:38:16.155+05:30  WARN 33612 --- [hospital-appointment-system] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-09-04T16:38:16.220+05:30  WARN 33612 --- [hospital-appointment-system] [main] r$InitializeUserDetailsManagerConfigurer : Found 2 UserDetailsService beans, with names [customUserDetailsService, userDetailsService]. Global Authentication Manager will not use a UserDetailsService for username/password login. Consider publishing a single UserDetailsService bean.
+2026-09-04T16:38:17.568+05:30  INFO 33612 --- [hospital-appointment-system] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2026-09-04T16:38:17.585+05:30  INFO 33612 --- [hospital-appointment-system] [main] h.a.HospitalAppointmentSystemApplication : Started HospitalAppointmentSystemApplication in 11.907 seconds (process running for 12.96)
+2026-09-04T16:38:43.051+05:30  INFO 33612 --- [hospital-appointment-system] [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-04T16:38:43.055+05:30  INFO 33612 --- [hospital-appointment-system] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-09-04T16:38:43.060+05:30  INFO 33612 --- [hospital-appointment-system] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 5 ms
+2026-09-04T16:38:45.107+05:30  INFO 33612 --- [hospital-appointment-system] [http-nio-8080-exec-4] o.springdoc.api.AbstractOpenApiResource  : Init duration for springdoc-openapi is: 1155 ms
+2026-09-04T16:39:10.040+05:30  INFO 33612 --- [hospital-appointment-system] [http-nio-8080-exec-5] c.h.a.service.impl.UserServiceImpl       : Login attempt for username: ruhan
+2026-09-04T16:39:10.434+05:30 ERROR 33612 --- [hospital-appointment-system] [http-nio-8080-exec-5] c.h.a.service.impl.UserServiceImpl       : Login failed. User not found: ruhan
+2026-09-04T16:39:29.542+05:30  INFO 33612 --- [hospital-appointment-system] [http-nio-8080-exec-6] c.h.a.service.impl.UserServiceImpl       : Login attempt for username: admin
+2026-09-04T16:39:29.542+05:30  INFO 33612 --- [hospital-appointment-system] [http-nio-8080-exec-6] c.h.a.service.impl.UserServiceImpl       : Admin login successful
+2026-09-04T16:41:31.491+05:30  INFO 33612 --- [hospital-appointment-system] [http-nio-8080-exec-10] c.h.a.s.impl.AppointmentServiceImpl      : Fetching all appointments
+2026-09-04T17:26:03.329+05:30  WARN 33612 --- [hospital-appointment-system] [HikariPool-1:housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=44m20s173ms306µs900ns).
+2026-09-04T22:53:30.976+05:30  WARN 33612 --- [hospital-appointment-system] [HikariPool-1:housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=5h27m38s77ms401µs300ns).
+2026-09-04T22:55:13.239+05:30  INFO 33612 --- [hospital-appointment-system] [http-nio-8080-exec-10] c.h.a.service.impl.UserServiceImpl       : Login attempt for username: admin
+2026-09-04T22:55:13.257+05:30  INFO 33612 --- [hospital-appointment-system] [http-nio-8080-exec-10] c.h.a.service.impl.UserServiceImpl       : Admin login successful
+2026-09-04T22:57:36.735+05:30  INFO 33612 --- [hospital-appointment-system] [http-nio-8080-exec-4] c.h.a.s.impl.AppointmentServiceImpl      : Creating appointment. PatientId: 4, DoctorId: 4
+2026-09-04T22:57:42.883+05:30  INFO 33612 --- [hospital-appointment-system] [http-nio-8080-exec-4] c.h.a.s.impl.AppointmentServiceImpl      : Appointment booked successfully with id: 5
+2026-09-04T22:57:57.888+05:30  INFO 33612 --- [hospital-appointment-system] [http-nio-8080-exec-5] c.h.a.s.impl.AppointmentServiceImpl      : Fetching all appointments
+2026-09-04T23:48:35.458+05:30  WARN 33612 --- [hospital-appointment-system] [HikariPool-1:housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=34m51s510ms190µs500ns).

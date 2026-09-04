@@ -3,10 +3,12 @@ package com.hospital.appointment.service.impl;
 import java.time.LocalTime;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.hospital.appointment.entity.Appointment;
+import com.hospital.appointment.dto.AppointmentRequestDto;
 import com.hospital.appointment.exception.AppointmentNotFoundException;
 import com.hospital.appointment.exception.DoctorNotFoundException;
 import com.hospital.appointment.exception.InvalidAppointmentSlotException;
@@ -16,9 +18,15 @@ import com.hospital.appointment.repository.AppointmentRepository;
 import com.hospital.appointment.repository.DoctorRepository;
 import com.hospital.appointment.repository.PatientRepository;
 import com.hospital.appointment.service.AppointmentService;
+import com.hospital.appointment.dto.AppointmentUpdateRequestDto;
+import com.hospital.appointment.entity.Appointment;
 
 @Service
 public class AppointmentServiceImpl implements AppointmentService {
+
+    private static final Logger logger =
+            LoggerFactory.getLogger(
+                    AppointmentServiceImpl.class);
 
     @Autowired
     private AppointmentRepository appointmentRepository;
@@ -30,43 +38,76 @@ public class AppointmentServiceImpl implements AppointmentService {
     private DoctorRepository doctorRepository;
 
     @Override
-    public Appointment createAppointment(Appointment appointment) {
+    public Appointment createAppointment(
+            AppointmentRequestDto dto) {
 
-        // Validate Patient
+        Appointment appointment =
+                new Appointment();
+
+        appointment.setPatientId(
+                dto.getPatientId());
+
+        appointment.setDoctorId(
+                dto.getDoctorId());
+
+        appointment.setAppointmentDate(
+                dto.getAppointmentDate());
+
+        appointment.setAppointmentTime(
+                dto.getAppointmentTime());
+
+        logger.info(
+                "Creating appointment. PatientId: {}, DoctorId: {}",
+                appointment.getPatientId(),
+                appointment.getDoctorId());
+
         if (!patientRepository.existsById(
                 appointment.getPatientId())) {
+
+            logger.error(
+                    "Patient not found with id: {}",
+                    appointment.getPatientId());
 
             throw new PatientNotFoundException(
                     "Patient not found");
         }
 
-        // Validate Doctor
         if (!doctorRepository.existsById(
                 appointment.getDoctorId())) {
+
+            logger.error(
+                    "Doctor not found with id: {}",
+                    appointment.getDoctorId());
 
             throw new DoctorNotFoundException(
                     "Doctor not found");
         }
 
-        // Validate Working Hours
-        LocalTime time = appointment.getAppointmentTime();
+        LocalTime time =
+                appointment.getAppointmentTime();
 
         if (time.isBefore(LocalTime.of(9, 0))
                 || time.isAfter(LocalTime.of(18, 0))) {
+
+            logger.warn(
+                    "Invalid appointment slot requested: {}",
+                    time);
 
             throw new InvalidAppointmentSlotException(
                     "Appointments can only be booked between 09:00 and 18:00");
         }
 
-        // Validate 30 Minute Slots
         if (time.getMinute() != 0
                 && time.getMinute() != 30) {
+
+            logger.warn(
+                    "Invalid appointment interval requested: {}",
+                    time);
 
             throw new InvalidAppointmentSlotException(
                     "Appointments are allowed only in 30-minute intervals");
         }
 
-        // Prevent Patient Double Booking
         boolean patientAlreadyBooked =
                 appointmentRepository
                         .existsByPatientIdAndAppointmentDateAndAppointmentTime(
@@ -76,11 +117,14 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         if (patientAlreadyBooked) {
 
+            logger.warn(
+                    "Patient double booking attempt. PatientId: {}",
+                    appointment.getPatientId());
+
             throw new SlotAlreadyBookedException(
                     "Patient already has an appointment for this slot");
         }
 
-        // Prevent Doctor Double Booking
         boolean doctorAlreadyBooked =
                 appointmentRepository
                         .existsByDoctorIdAndAppointmentDateAndAppointmentTime(
@@ -90,63 +134,116 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         if (doctorAlreadyBooked) {
 
+            logger.warn(
+                    "Doctor double booking attempt. DoctorId: {}",
+                    appointment.getDoctorId());
+
             throw new SlotAlreadyBookedException(
                     "Doctor already booked for this slot");
         }
 
-        return appointmentRepository.save(appointment);
+        Appointment savedAppointment =
+                appointmentRepository.save(
+                        appointment);
+
+        logger.info(
+                "Appointment booked successfully with id: {}",
+                savedAppointment.getAppointmentId());
+
+        return savedAppointment;
     }
 
     @Override
     public List<Appointment> getAllAppointments() {
+
+        logger.info(
+                "Fetching all appointments");
+
         return appointmentRepository.findAll();
     }
 
     @Override
-    public Appointment getAppointmentById(Long appointmentId) {
+    public Appointment getAppointmentById(
+            Long appointmentId) {
+
+        logger.info(
+                "Fetching appointment with id: {}",
+                appointmentId);
 
         return appointmentRepository
                 .findById(appointmentId)
-                .orElseThrow(() ->
-                        new AppointmentNotFoundException(
-                                "Appointment not found with id : "
-                                        + appointmentId));
+                .orElseThrow(() -> {
+
+                    logger.error(
+                            "Appointment not found with id: {}",
+                            appointmentId);
+
+                    return new AppointmentNotFoundException(
+                            "Appointment not found with id : "
+                                    + appointmentId);
+                });
     }
 
     @Override
     public Appointment updateAppointment(
             Long appointmentId,
-            Appointment appointment) {
+            AppointmentUpdateRequestDto dto) {
+
+        logger.info(
+                "Updating appointment with id: {}",
+                appointmentId);
 
         Appointment existingAppointment =
                 appointmentRepository
                         .findById(appointmentId)
-                        .orElseThrow(() ->
-                                new AppointmentNotFoundException(
-                                        "Appointment not found with id : "
-                                                + appointmentId));
+                        .orElseThrow(() -> {
+
+                            logger.error(
+                                    "Appointment not found with id: {}",
+                                    appointmentId);
+
+                            return new AppointmentNotFoundException(
+                                    "Appointment not found with id : "
+                                            + appointmentId);
+                        });
 
         existingAppointment.setPatientId(
-                appointment.getPatientId());
+                dto.getPatientId());
 
         existingAppointment.setDoctorId(
-                appointment.getDoctorId());
+                dto.getDoctorId());
 
         existingAppointment.setAppointmentDate(
-                appointment.getAppointmentDate());
+                dto.getAppointmentDate());
 
         existingAppointment.setAppointmentTime(
-                appointment.getAppointmentTime());
+                dto.getAppointmentTime());
 
-        return appointmentRepository.save(
-                existingAppointment);
+        Appointment updatedAppointment =
+                appointmentRepository.save(
+                        existingAppointment);
+
+        logger.info(
+                "Appointment updated successfully with id: {}",
+                appointmentId);
+
+        return updatedAppointment;
     }
 
     @Override
-    public void cancelAppointment(Long appointmentId) {
+    public void cancelAppointment(
+            Long appointmentId) {
+
+        logger.info(
+                "Cancelling appointment with id: {}",
+                appointmentId);
 
         if (!appointmentRepository.existsById(
                 appointmentId)) {
+
+            logger.error(
+                    "Appointment not found with id: {}",
+                    appointmentId);
 
             throw new AppointmentNotFoundException(
                     "Appointment not found with id : "
@@ -155,13 +252,26 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         appointmentRepository.deleteById(
                 appointmentId);
+
+        logger.info(
+                "Appointment cancelled successfully with id: {}",
+                appointmentId);
     }
-    
+
     @Override
     public List<Appointment> getAppointmentsByDoctorId(
             Long doctorId) {
 
-        if (!doctorRepository.existsById(doctorId)) {
+        logger.info(
+                "Fetching appointments for doctorId: {}",
+                doctorId);
+
+        if (!doctorRepository.existsById(
+                doctorId)) {
+
+            logger.error(
+                    "Doctor not found with id: {}",
+                    doctorId);
 
             throw new DoctorNotFoundException(
                     "Doctor not found with id : "
@@ -171,20 +281,28 @@ public class AppointmentServiceImpl implements AppointmentService {
         return appointmentRepository.findByDoctorId(
                 doctorId);
     }
-    
+
     @Override
     public List<Appointment> getAppointmentsByPatientId(
             Long patientId) {
 
-        if (!patientRepository.existsById(patientId)) {
+        logger.info(
+                "Fetching appointments for patientId: {}",
+                patientId);
+
+        if (!patientRepository.existsById(
+                patientId)) {
+
+            logger.error(
+                    "Patient not found with id: {}",
+                    patientId);
 
             throw new PatientNotFoundException(
                     "Patient not found with id : "
                             + patientId);
         }
 
-        return appointmentRepository
-                .findByPatientId(patientId);
+        return appointmentRepository.findByPatientId(
+                patientId);
     }
-    
 }
